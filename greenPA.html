@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Solar-Hub | Super GaN Charging Node</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Analytics 4 (请替换 G-XXXXXXXXXX 为你的真实 Measurement ID) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+
+    // 自定义页面加载事件
+    gtag('event', 'solar_hub_pv', {
+      'node_id': 'palo_alto_coupa_04',
+      'location': 'Palo Alto'
+    });
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between p-6 font-sans antialiased">
+
+  <!-- 顶部 Header -->
+  <header class="pt-4 text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      Solar-Hub 1.0 | Palo Alto Pilot
+    </div>
+    <h1 class="text-3xl font-extrabold tracking-tight text-white mb-1">Clean Power Node</h1>
+    <p class="text-sm text-slate-400">Coupa Cafe Express Station #04</p>
+  </header>
+
+  <!-- 核心主卡片 -->
+  <main class="my-auto py-6">
+    <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden">
+      <!-- 背景微光特效 -->
+      <div class="absolute -top-12 -right-12 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl"></div>
+
+      <!-- 节点状态与规格 -->
+      <div class="space-y-4 mb-8">
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+          <span class="text-slate-400 text-sm">Charging Speed</span>
+          <span class="font-bold text-amber-400 flex items-center gap-1">
+            ⚡ 30W Super GaN
+          </span>
+        </div>
+        
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+          <span class="text-slate-400 text-sm">Energy Source</span>
+          <span class="text-sm font-medium text-slate-200">100% Silicon Valley Sun</span>
+        </div>
+
+        <div class="flex justify-between items-center">
+          <span class="text-slate-400 text-sm">Rate</span>
+          <span class="text-2xl font-black text-white">$3.00 <span class="text-xs font-normal text-slate-400">/ hour</span></span>
+        </div>
+      </div>
+
+      <!-- 高仿 Apple Pay 支付按钮 -->
+      <button id="pay-btn" onclick="handlePayClick()" class="w-full bg-white hover:bg-slate-100 text-black font-semibold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 text-lg transition-all active:scale-[0.98] shadow-lg">
+        <svg class="w-6 h-6 fill-current mb-0.5" viewBox="0 0 170 170">
+          <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.33.13-9.13-1.9-14.42-6.08-3.48-2.91-7.46-7.72-11.95-14.42-7.19-10.74-12.58-22.75-16.16-36.03-3.58-13.28-5.37-25.59-5.37-36.93 0-14.54 3.53-26.65 10.58-36.33 7.06-9.68 15.98-14.61 26.78-14.8 4.89 0 10.02 1.25 15.39 3.75 5.37 2.5 9.17 3.75 11.4 3.75 2.01 0 5.86-1.25 11.56-3.75 5.7-2.5 10.51-3.64 14.42-3.43 11.51.9 20.89 5.38 28.14 13.43-10.18 6.16-15.18 14.8-15 25.92.23 8.71 3.52 16.03 9.88 21.96 6.36 5.93 13.93 9.32 22.7 10.17-2.23 6.64-5.13 13.31-8.7 20.02zM119.22 31.62c0-6.43 2.39-12.7 7.17-18.8 4.78-6.1 10.82-9.93 18.12-11.5 0.22 1.01.33 1.9.33 2.68 0 6.32-2.39 12.59-7.17 18.81-4.78 6.21-10.81 10.1-18.12 11.66-.23-.9-.33-1.85-.33-2.85z"/>
+        </svg>
+        <span>Pay with Apple Pay</span>
+      </button>
+
+      <!-- Loading 隐藏转圈 -->
+      <div id="loading-state" class="hidden w-full py-4 flex justify-center items-center gap-3 text-slate-400">
+        <svg class="animate-spin h-6 w-6 text-amber-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span class="text-sm font-medium">Connecting to Node #04...</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- 底部 Footer -->
+  <footer class="text-center text-xs text-slate-500 pb-2">
+    100% Carbon Neutral Charging • Palo Alto Innovation Lab
+  </footer>
+
+  <!-- Beta 弹窗（点击 Apple Pay 后触发） -->
+  <div id="beta-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-6 hidden z-50">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-4">
+      <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-center text-amber-400 text-xl font-bold">
+        ⚡
+      </div>
+      
+      <div>
+        <h3 class="text-xl font-bold text-white mb-1">Zero Charges Made</h3>
+        <p class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Closed Beta Active at Coupa Cafe</p>
+      </div>
+
+      <p class="text-sm text-slate-300 leading-relaxed">
+        Thank you for your interest! This charging node is currently undergoing automated calibration. <strong>Your card has NOT been charged.</strong>
+      </p>
+
+      <p class="text-xs text-slate-400">
+        Need an emergency charge? Please ask the barista for a temporary cable.
+      </p>
+
+      <!-- 邮箱 Lead 收集表单 -->
+      <div id="email-form-container" class="pt-2 border-t border-slate-800 space-y-3">
+        <label class="block text-xs font-medium text-slate-300">
+          Get a <strong>$10 Coupon</strong> for our official launch:
+        </label>
+        <input type="email" id="user-email" placeholder="enter.your@email.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-colors" />
+        <button onclick="handleEmailSubmit()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 px-4 rounded-xl text-sm transition-all active:scale-[0.98]">
+          Claim $10 Coupon
+        </button>
+      </div>
+
+      <!-- 提交成功后提示 -->
+      <div id="email-success" class="hidden text-center py-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-sm font-medium">
+        🎉 You're on the priority list!
+      </div>
+    </div>
+  </div>
+
+  <!-- 前端交互与埋点脚本 -->
+  <script>
+    function handlePayClick() {
+      // 1. 触发 GA4 点击事件 (测速最核心指标)
+      gtag('event', 'click_apple_pay', {
+        'node_id': 'palo_alto_coupa_04',
+        'price': 3.00
+      });
+
+      // 2. 按钮切换为加载状态
+      document.getElementById('pay-btn').classList.add('hidden');
+      document.getElementById('loading-state').classList.remove('hidden');
+
+      // 3. 模拟 800ms 节点通信通信后弹出提示框
+      setTimeout(() => {
+        document.getElementById('beta-modal').classList.remove('hidden');
+      }, 800);
+    }
+
+    function handleEmailSubmit() {
+      const emailInput = document.getElementById('user-email');
+      const email = emailInput.value.trim();
+
+      if (email && email.includes('@')) {
+        // 触发 GA4 邮箱提交事件
+        gtag('event', 'submit_email', {
+          'node_id': 'palo_alto_coupa_04',
+          'user_email': email
+        });
+
+        // UI 状态更新
+        document.getElementById('email-form-container').classList.add('hidden');
+        document.getElementById('email-success').classList.remove('hidden');
+
+        // 3 秒后关闭弹窗
+        setTimeout(() => {
+          document.getElementById('beta-modal').classList.add('hidden');
+        }, 3000);
+      } else {
+        emailInput.classList.add('border-red-500');
+      }
+    }
+  </script>
+</body>
+</html>
