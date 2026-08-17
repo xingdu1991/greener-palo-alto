@@ -3,25 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Solar-Hub | Super GaN Charging Node</title>
+  <title>SolHub | Super GaN Charging Node</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Analytics 4 (请替换 G-XXXXXXXXXX 为你的真实 Measurement ID) -->
+  <!-- Google Analytics 4 (请将 G-XXXXXXXXXX 替换为你的 GA4 测量 ID) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
+    gtag('config', 'G-E49RMBR47D');
 
-    // 自定义页面加载事件
-    gtag('event', 'solar_hub_pv', {
+    // 页面加载 PV 自定义事件
+    gtag('event', 'solhub_pv', {
       'node_id': 'palo_alto_coupa_04',
       'location': 'Palo Alto'
     });
   </script>
+
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between p-6 font-sans antialiased">
 
@@ -29,7 +30,7 @@
   <header class="pt-4 text-center">
     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-      Solar-Hub 1.0 | Palo Alto Pilot
+      SolHub 1.0 | Palo Alto Pilot
     </div>
     <h1 class="text-3xl font-extrabold tracking-tight text-white mb-1">Clean Power Node</h1>
     <p class="text-sm text-slate-400">Coupa Cafe Express Station #04</p>
@@ -69,13 +70,13 @@
         <span>Pay with Apple Pay</span>
       </button>
 
-      <!-- Loading 隐藏转圈 -->
+      <!-- Loading 隐藏转圈状态 -->
       <div id="loading-state" class="hidden w-full py-4 flex justify-center items-center gap-3 text-slate-400">
         <svg class="animate-spin h-6 w-6 text-amber-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <span class="text-sm font-medium">Connecting to Node #04...</span>
+        <span class="text-sm font-medium">Connecting to SolHub Node #04...</span>
       </div>
     </div>
   </main>
@@ -98,7 +99,7 @@
       </div>
 
       <p class="text-sm text-slate-300 leading-relaxed">
-        Thank you for your interest! This charging node is currently undergoing automated calibration. <strong>Your card has NOT been charged.</strong>
+        Thank you for your interest! This charging node is <strong>currently in active development</strong> for our Palo Alto launch. <strong>Your card has NOT been charged.</strong>
       </p>
 
       <p class="text-xs text-slate-400">
@@ -111,7 +112,7 @@
           Get a <strong>$10 Coupon</strong> for our official launch:
         </label>
         <input type="email" id="user-email" placeholder="enter.your@email.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-colors" />
-        <button onclick="handleEmailSubmit()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 px-4 rounded-xl text-sm transition-all active:scale-[0.98]">
+        <button id="submit-btn" onclick="handleEmailSubmit()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 px-4 rounded-xl text-sm transition-all active:scale-[0.98]">
           Claim $10 Coupon
         </button>
       </div>
@@ -123,44 +124,75 @@
     </div>
   </div>
 
-  <!-- 前端交互与埋点脚本 -->
+  <!-- 前端交互与 Web3Forms 发件脚本 -->
   <script>
     function handlePayClick() {
-      // 1. 触发 GA4 点击事件 (测速最核心指标)
+      // 1. 触发 GA4 点击事件
       gtag('event', 'click_apple_pay', {
         'node_id': 'palo_alto_coupa_04',
         'price': 3.00
       });
 
-      // 2. 按钮切换为加载状态
+      // 2. 切换按钮为 Loading 状态
       document.getElementById('pay-btn').classList.add('hidden');
       document.getElementById('loading-state').classList.remove('hidden');
 
-      // 3. 模拟 800ms 节点通信通信后弹出提示框
+      // 3. 模拟 800ms 通信后弹出提示框
       setTimeout(() => {
         document.getElementById('beta-modal').classList.remove('hidden');
       }, 800);
     }
 
-    function handleEmailSubmit() {
+    async function handleEmailSubmit() {
       const emailInput = document.getElementById('user-email');
+      const submitBtn = document.getElementById('submit-btn');
       const email = emailInput.value.trim();
 
       if (email && email.includes('@')) {
-        // 触发 GA4 邮箱提交事件
+        // 1. 触发 GA4 邮箱提交事件
         gtag('event', 'submit_email', {
           'node_id': 'palo_alto_coupa_04',
           'user_email': email
         });
 
-        // UI 状态更新
-        document.getElementById('email-form-container').classList.add('hidden');
-        document.getElementById('email-success').classList.remove('hidden');
+        // 按钮进入 Sending 状态
+        submitBtn.innerText = 'Sending...';
+        submitBtn.disabled = true;
 
-        // 3 秒后关闭弹窗
-        setTimeout(() => {
-          document.getElementById('beta-modal').classList.add('hidden');
-        }, 3000);
+        try {
+          // 2. 调用 Web3Forms API 发送真实提醒邮件到你的收件箱
+          const response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              // ⚠️ 替换为你在 web3forms.com 申请到的真实 Access Key
+              access_key: '23264bc6-5013-463c-9ec2-e420e3c24e1b', 
+              subject: '⚡ New SolHub VIP Lead from Palo Alto Pilot!',
+              from_name: 'SolHub Solar Charge',
+              email: email,
+              message: `User ${email} tapped Apple Pay ($3.00) at Coupa Cafe and claimed the $10 coupon!`
+            })
+          });
+
+          if (response.ok) {
+            document.getElementById('email-form-container').classList.add('hidden');
+            document.getElementById('email-success').classList.remove('hidden');
+
+            setTimeout(() => {
+              document.getElementById('beta-modal').classList.add('hidden');
+            }, 3000);
+          } else {
+            throw new Error('Form submission failed');
+          }
+        } catch (error) {
+          console.error('Email send error:', error);
+          // 容错机制：即使接口报错也不给用户留不佳体验，依然提示成功
+          document.getElementById('email-form-container').classList.add('hidden');
+          document.getElementById('email-success').classList.remove('hidden');
+        }
       } else {
         emailInput.classList.add('border-red-500');
       }
